@@ -1,17 +1,22 @@
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Scanner;
+
+import javax.swing.text.Position;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.ArrayList;
 import java.util.Collections;
-
+import java.util.Comparator;
 
 public class adventofcode1 {
     public static void main(String[] args) throws Exception {
 
         // Leemos las líneas del archivo de entrada
-        List<String> lines = readLines("input.txt");
+        List<String> lines = readLines(
+                "C:\\Users\\Alex\\Documents\\Develop\\AdventOfCode\\Adent-of-Code-Day1\\input.txt");
         int numeroTotal = 0;
+        int numeroTotalString = 0;
         int contador = 0;
 
         // Iteramos sobre cada línea
@@ -25,53 +30,71 @@ public class adventofcode1 {
 
             contador = contador + 1;
 
-            System.out.println(contador + " ");
-
             List<ValorPosicion> llistaValorPosicio = new ArrayList<>();
             llistaValorPosicio = primerNumeroString(line);
-            int numeroMesGranString = 0;
-            int numeroMesPetitString = 0;
-            int major = 0;
-            int menor = 0;
 
-            for(int i = 0; i < llistaValorPosicio.size(); i++){
-                if (llistaValorPosicio.get(i).getPosicion() > major) {
-                    major = llistaValorPosicio.get(i).getPosicion();
-                }
-            }
-            for(ValorPosicion valorPosicion:llistaValorPosicio){
-                if(major == valorPosicion.getPosicion()){
-                    numeroMesGranString = valorPosicion.getValor();
-                    System.out.println("El numero mes gran es" + numeroMesGranString);
-                }
-            }
-            for(int i = 0; i < llistaValorPosicio.size(); i++){
-                if (llistaValorPosicio.get(i).getPosicion() < menor) {
-                    menor = llistaValorPosicio.get(i).getPosicion();
-                }
-            }
-            for(ValorPosicion valorPosicion:llistaValorPosicio){
-                if(menor == valorPosicion.getPosicion()){
-                    numeroMesPetitString = valorPosicion.getValor();
-                    System.out.println("El numero mes petit es" + numeroMesPetitString);
-                }
-            }
+            int numeroMesGranString = obtenirGran(llistaValorPosicio);
+            int numeroMesPetitString = ObtenirPetit(llistaValorPosicio);
+
+            // Souts para mostrar los numeros selecionados para cada ronda
+            /*
+             * System.out.println("\nNumero posicion primera P2: " + numeroMesPetitString);
+             * System.out.println("Numero posicion ultima P2: " + numeroMesGranString +
+             * "\n");
+             * 
+             * 
+             * int numeroDeRonda = Integer
+             * .valueOf(String.valueOf(numeroMesPetitString) +
+             * String.valueOf(numeroMesGranString));
+             * 
+             * System.out.println("Num Concadenado P2: " + numeroDeRonda);
+             * System.out.println("\n---------------------------------------------");
+             */
+
+            numeroTotalString = numeroTotalString
+                    + Integer.valueOf(String.valueOf(numeroMesPetitString) + String.valueOf(numeroMesGranString));
         }
-        System.out.println("Numero total: " + numeroTotal);
+        System.out.println("Numero total P1: " + numeroTotal);
+        System.out.println("Numero total P2: " + numeroTotalString);
     }
 
-    // Método para leer las líneas de un archivo
-    public static List<String> readLines(String filename) throws Exception {
-        InputStream ins = new FileInputStream(filename);
-        List<String> lines = new ArrayList<>();
-        try (Scanner obj = new Scanner(ins)) {
-            while (obj.hasNextLine())
-                lines.add(obj.nextLine());
+    // Metodo para obterner el ultimo numero del string de la parte 2
+    public static int obtenirGran(List<ValorPosicion> llistaValorPosicio) {
+        int numeroMesGranString = 0;
+        int major = 0;
+
+        // Obtenim el ultim numero de la linea que estem recorrent.
+        for (int i = 0; i < llistaValorPosicio.size(); i++) {
+            if (llistaValorPosicio.get(i).getPosicion() >= major) {
+                major = llistaValorPosicio.get(i).getPosicion();
+                numeroMesGranString = llistaValorPosicio.get(i).getValor();
+            }
         }
-        return lines;
+        return numeroMesGranString;
     }
 
-    // Método para obtener el primer número de una cadena
+    // Metodo para obterner el primer numero del string de la parte 2
+    public static int ObtenirPetit(List<ValorPosicion> llistaValorPosicio) {
+        int numeroMesPetitString = 0;
+        int menor = 0;
+        int entrador = -1;
+
+        // Obtenim el primer numero de la linea que estem recorrent.
+        for (int i = 0; i < llistaValorPosicio.size(); i++) {
+            if (entrador == -1) {
+                menor = llistaValorPosicio.get(i).getPosicion();
+                numeroMesPetitString = llistaValorPosicio.get(i).getValor();
+                entrador = 0;
+            } else if (llistaValorPosicio.get(i).getPosicion() <= menor) {
+                menor = llistaValorPosicio.get(i).getPosicion();
+                numeroMesPetitString = llistaValorPosicio.get(i).getValor();
+            }
+        }
+
+        return numeroMesPetitString;
+    }
+
+    // Método para obtener el primer número de una cadena. Parte 1
     public static int primerNumero(String linea) {
         int primerNumero = 0;
         for (int iterPrimerNum = 0; iterPrimerNum < linea.length(); iterPrimerNum++) {
@@ -83,7 +106,7 @@ public class adventofcode1 {
         return primerNumero;
     }
 
-    // Método para obtener el último número de una cadena
+    // Método para obtener el último número de una cadena. Parte 1
     public static int ultimNumero(String linea) {
         int ultimNumero = 0;
         for (int iterUiltimoNum = linea.length() - 1; iterUiltimoNum >= 0; iterUiltimoNum--) {
@@ -95,20 +118,73 @@ public class adventofcode1 {
         return ultimNumero;
     }
 
-    public static List<ValorPosicion> primerNumeroString(String linea) {
-
-        List<String> listaNumerosStrings = listaNumeros();
+    // Funcion para encontrar el valor y la posicion de los numeros String de la
+    // primera linea .
+    public static List<ValorPosicion> encontrarValorPosicionPrimeraLinea(String linea,
+            List<String> listaNumerosStrings) {
         List<ValorPosicion> listaValorPosicion = new ArrayList<>();
         for (int i = 0; i < listaNumerosStrings.size(); i++) {
-            if (linea.indexOf(listaNumerosStrings.get(i)) >= 0) {
-                int valorInciail = valorStringToNumerico(i);
-                int posicioValor = linea.indexOf(listaNumerosStrings.get(i));
-                ValorPosicion valorPosicion = new ValorPosicion(valorInciail, posicioValor);
+            int contador = linea.indexOf(listaNumerosStrings.get(i));
+            while (contador >= 0) {
+                int valorInicial = valorStringToNumerico(i);
+                ValorPosicion valorPosicion = new ValorPosicion(valorInicial, contador);
                 listaValorPosicion.add(valorPosicion);
-                System.out.print("valor:" + valorInciail + " Posicio: " + posicioValor + "\n");
+                contador = linea.indexOf(listaNumerosStrings.get(i), contador + 1);
             }
         }
         return listaValorPosicion;
+    }
+
+    // Funcion para encontrar el valor y la posicion de la primera posicion de la
+    // primera linea .
+    public static List<ValorPosicion> encontrarValorPosicionPrimerNumero(String linea,
+            List<String> listaNumerosStrings) {
+        List<ValorPosicion> listaValorPosicion = new ArrayList<>();
+        for (int i = 0; i <= listaNumerosStrings.size(); i++) {
+            int contador = linea.indexOf(String.valueOf(i));
+            while (contador >= 0) {
+                ValorPosicion valorPosicion = new ValorPosicion(i, contador);
+                listaValorPosicion.add(valorPosicion);
+                contador = linea.indexOf(i, contador + 1);
+            }
+        }
+        return listaValorPosicion;
+    }
+
+    // Funcion para encontrar el valor y la posicion de la ultima posicion de la
+    // primera linea .
+    public static List<ValorPosicion> encontrarValorPosicionUltimoNumero(String linea,
+            List<String> listaNumerosStrings) {
+        List<ValorPosicion> listaValorPosicion = new ArrayList<>();
+        for (int i = 0; i <= listaNumerosStrings.size(); i++) {
+            int contador = linea.lastIndexOf(String.valueOf(i));
+            while (contador >= 0) {
+                ValorPosicion valorPosicion = new ValorPosicion(i, contador);
+                listaValorPosicion.add(valorPosicion);
+                contador = linea.lastIndexOf(i, contador + 1);
+            }
+        }
+        return listaValorPosicion;
+    }
+
+    public static List<ValorPosicion> primerNumeroString(String linea) {
+        List<String> listaNumerosStrings = listaNumeros();
+        List<ValorPosicion> listaValorPosicion = new ArrayList<>();
+        listaValorPosicion.addAll(encontrarValorPosicionPrimeraLinea(linea, listaNumerosStrings));
+        listaValorPosicion.addAll(encontrarValorPosicionPrimerNumero(linea, listaNumerosStrings));
+        listaValorPosicion.addAll(encontrarValorPosicionUltimoNumero(linea, listaNumerosStrings));
+        return listaValorPosicion;
+    }
+
+    // Método para leer las líneas de un archivo
+    public static List<String> readLines(String filename) throws Exception {
+        InputStream ins = new FileInputStream(filename);
+        List<String> lines = new ArrayList<>();
+        try (Scanner obj = new Scanner(ins)) {
+            while (obj.hasNextLine())
+                lines.add(obj.nextLine());
+        }
+        return lines;
     }
 
     public static int valorStringToNumerico(int num) {
@@ -134,11 +210,6 @@ public class adventofcode1 {
             default:
                 return 0;
         }
-
-    }
-
-    public static String ultimNumeroString(String linea) {
-        return "";
 
     }
 
