@@ -1,7 +1,6 @@
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Scanner;
-
 import javax.swing.text.Position;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -21,6 +20,7 @@ public class adventofcode1 {
 
         // Iteramos sobre cada línea
         for (String line : lines) {
+
             // Obtenemos el primer número de la línea
             int primerNumero = primerNumero(line);
             // Obtenemos el último número de la línea
@@ -32,7 +32,7 @@ public class adventofcode1 {
 
             List<ValorPosicion> llistaValorPosicio = new ArrayList<>();
             llistaValorPosicio = primerNumeroString(line);
-
+            // Obtenemos el primer y ultimo numero de la linea
             int numeroMesGranString = obtenirGran(llistaValorPosicio);
             int numeroMesPetitString = ObtenirPetit(llistaValorPosicio);
 
