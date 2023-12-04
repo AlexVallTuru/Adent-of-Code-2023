@@ -35,22 +35,6 @@ public class adventofcode1 {
             // Obtenemos el primer y ultimo numero de la linea
             int numeroMesGranString = obtenirGran(llistaValorPosicio);
             int numeroMesPetitString = ObtenirPetit(llistaValorPosicio);
-
-            // Souts para mostrar los numeros selecionados para cada ronda
-            /*
-             * System.out.println("\nNumero posicion primera P2: " + numeroMesPetitString);
-             * System.out.println("Numero posicion ultima P2: " + numeroMesGranString +
-             * "\n");
-             * 
-             * 
-             * int numeroDeRonda = Integer
-             * .valueOf(String.valueOf(numeroMesPetitString) +
-             * String.valueOf(numeroMesGranString));
-             * 
-             * System.out.println("Num Concadenado P2: " + numeroDeRonda);
-             * System.out.println("\n---------------------------------------------");
-             */
-
             numeroTotalString = numeroTotalString
                     + Integer.valueOf(String.valueOf(numeroMesPetitString) + String.valueOf(numeroMesGranString));
         }
